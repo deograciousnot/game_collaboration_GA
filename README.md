@@ -1,0 +1,3 @@
+# game_collaboration_GA
+
+a simple tic tac toe game done via group work...

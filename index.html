@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TicTacGO</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>TicTacGO</h1>
+
+    <div class="player-setup">
+      <input type="text" id="player1-name" placeholder="Player 1 Name" />
+      <input type="text" id="player2-name" placeholder="Player 2 Name" />
+      <select id="player1-emoji">
+        <option value="❌">❌</option>
+        <option value="🐱">🐱</option>
+        <option value="🦊">🦊</option>
+      </select>
+      <select id="player2-emoji">
+        <option value="⭕">⭕</option>
+        <option value="🐶">🐶</option>
+        <option value="🐸">🐸</option>
+      </select>
+      <div class="mode-select">
+  <label><input type="radio" name="mode" value="pvp" checked /> Player vs Player</label>
+  <label><input type="radio" name="mode" value="pvp-timed" /> PvP (Timed)</label>
+  <label><input type="radio" name="mode" value="bot" /> Player vs Bot</label>
+</div>
+
+      <button id="start-btn">Start Game</button>
+    </div>
+
+    <div id="scoreboard">
+      <p>Score: <span id="p1-score">0</span> - <span id="p2-score">0</span></p>
+    </div>
+
+    <div class="board" id="board"></div>
+
+    <div id="message"></div>
+
+    <div class="controls">
+      <button id="rematch-btn">Rematch</button>
+      <button id="mute-btn">Mute</button>
+    </div>
+  </div>
+
+  <script src="js/game.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>
