@@ -1,0 +1,89 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: lightblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  text-align: center;
+  max-width: 400px;
+  background: transparent;
+  padding: 2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background 0.3s;
+}
+
+.cell:hover {
+  background: rgba(219, 204, 204, 0.2);
+}
+
+.player-setup input,
+.player-setup select,
+.controls button {
+  margin: 5px;
+  padding: 8px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.controls button:hover {
+  background-color: #d1e7dd;
+  cursor: pointer;
+}
+
+#message {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #FFD700;
+
+}
+.mode-select {
+  margin: 10px 0;
+}
+.mode-select label {
+  margin-right: 10px;
+  font-size: 0.95rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.theme-section {
+  margin: 15px 0;
+}
+
+#theme-select {
+  padding: 8px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+

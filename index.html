@@ -4,30 +4,42 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TicTacGO</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body >
   <div class="container">
     <h1>TicTacGO</h1>
-
+   
     <div class="player-setup">
       <input type="text" id="player1-name" placeholder="Player 1 Name" />
-      <input type="text" id="player2-name" placeholder="Player 2 Name" />
       <select id="player1-emoji">
         <option value="❌">❌</option>
         <option value="🐱">🐱</option>
         <option value="🦊">🦊</option>
       </select>
+      <input type="text" id="player2-name" placeholder="Player 2 Name" />
       <select id="player2-emoji">
         <option value="⭕">⭕</option>
         <option value="🐶">🐶</option>
         <option value="🐸">🐸</option>
       </select>
-      <div class="mode-select">
-  <label><input type="radio" name="mode" value="pvp" checked /> Player vs Player</label>
-  <label><input type="radio" name="mode" value="pvp-timed" /> PvP (Timed)</label>
-  <label><input type="radio" name="mode" value="bot" /> Player vs Bot</label>
+    <div class="theme-section">
+      <label for="theme-select">Choose a Theme:</label>
+      <select id="theme-select">
+        <option value="" disabled selected hidden> Select Theme</option>
+        <option value="classic">🌲nature</option>
+        <option value="galaxy">🚀space</option>
+        <option value="war"> 🔥post-war</option>
+      </select>
+    </div>
+ 
+    <div class="mode-select">
+  <label><input type="radio" name="mode" value="pvp" checked /> 👥Normal mode</label>
+  <label><input type="radio" name="mode" value="pvp-timed" /> Pvp Timed mode</label>
+  <label><input type="radio" name="mode" value="bot" /> Bot mode</label>
 </div>
+ 
+
 
       <button id="start-btn">Start Game</button>
     </div>
@@ -45,8 +57,13 @@
       <button id="mute-btn">Mute</button>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <script src="js/game.js"></script>
   <script src="js/ui.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/timer.js"></script>
+  <script src="js/main.js"></script>
+
+
 </body>
 </html>
