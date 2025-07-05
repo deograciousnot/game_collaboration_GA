@@ -1,65 +1,94 @@
-let player;
-
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player("youtube-video", {
-    events: {
-      onStateChange: (event) => {
-        if (event.data === YT.PlayerState.ENDED) {
-          window.location.href = "index.html";
-        }
-      }
-    }
-  });
-}
-
 document.addEventListener("DOMContentLoaded", () => {
-  const button = document.getElementById("start-video-btn");
-  const music = document.getElementById("bg-music");
-  const videoBox = document.getElementById("video-container");
+  const line = document.getElementById("line");
+  const button = document.getElementById("start-btn");
+  const narration = document.getElementById("narration");
+  const skipBtn = document.getElementById("skip-intro");
+  const rulesGlass = document.getElementById("rules-glass");
+  const overlay = document.getElementById("transition-overlay");
 
   const lines = [
-    "Well well, you finally made it.",
-    "Welcome to our Tic-Tac-Toe game.",
-    "Ready to lose or win?",
-    "Your headache awaits 😈",
-    "Choose your path..."
+    "This is no ordinary Tic-Tac-Toe.",
+    "I see you made it.",
+    "It's a battle of wits... Tic-Tac-Tension awaits.",
+    "Begin, lowly traveler...",
+    "It has begun.",
+    "", // pause
+    "The rules of the game are simple...",
+    "Each player takes turns in one of three modes...",
+    "PvP. PvP Timed. Or Player vs Bot.",
+    "I should warn you... no one beats the machine.",
   ];
 
   let currentLine = 0;
 
-  function typeText(text, elementId, callback) {
-    const element = document.getElementById(elementId);
+  // Start narration
+  narration.play();
+
+  // Show skip button after short delay
+  setTimeout(() => {
+    skipBtn.style.display = "block";
+  }, 2000);
+
+  // Typing logic
+  function typeLine(lineText, callback) {
     let i = 0;
-    const typing = setInterval(() => {
-      element.textContent += text[i];
+    line.textContent = "";
+    const interval = setInterval(() => {
+      line.textContent += lineText.charAt(i);
       i++;
-      if (i === text.length) {
-        clearInterval(typing);
-        callback && callback();
+      if (i >= lineText.length) {
+        clearInterval(interval);
+        setTimeout(callback, 1200);
       }
-    }, 50);
+    }, 40);
   }
 
-  function showLines() {
-    if (currentLine < lines.length) {
-      typeText(lines[currentLine], `line${currentLine + 1}`, () => {
-        currentLine++;
-        setTimeout(showLines, 300);
-      });
+  function processLines() {
+    if (currentLine >= lines.length) {
+      showRules();
+      return;
+    }
+
+    const text = lines[currentLine];
+    currentLine++;
+
+    if (text === "") {
+      line.textContent = "";
+      setTimeout(processLines, 800);
     } else {
-      button.style.display = "inline-block";
+      typeLine(text, processLines);
     }
   }
 
-  showLines();
+  function showRules() {
+    line.textContent = "";
+    rulesGlass.classList.remove("hidden");
+    button.style.display = "inline-block";
+  }
 
-  button.addEventListener("click", () => {
-    music.pause();
-    videoBox.style.display = "block";
+function transitionToGame() {
+  const overlay = document.getElementById("transition-overlay");
+  const glitchText = overlay.querySelector(".glitch-text");
+  const glitchSound = document.getElementById("glitch-sound");
 
-  
-    if (player && typeof player.playVideo === "function") {
-      player.playVideo();
-    }
-  });
+  overlay.classList.add("active");
+
+  // Lower narration volume
+  narration.volume = 0.2;
+  glitchSound.volume = 0.9;
+  glitchSound.play();  // 🔊 play glitch FX
+
+  setTimeout(() => {
+    narration.pause();
+    glitchText.textContent = "";
+    window.location.href = "setup.html";
+  }, 1800);
+}
+
+  // Start typing sequence
+  processLines();
+
+  // Buttons
+  button.addEventListener("click", transitionToGame);
+  skipBtn.addEventListener("click", transitionToGame);
 });

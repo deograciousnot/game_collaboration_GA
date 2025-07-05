@@ -1,0 +1,157 @@
+/* File: css/setup.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #0f0f0f, #1a1a1a);
+  background-image: url("../assets/welcome.jpeg");
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 30px;
+}
+
+.setup-container {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  padding: 30px 40px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease-in-out;
+}
+
+.setup-container:hover {
+  box-shadow: 0 0 40px rgba(255, 221, 87, 0.2);
+}
+
+.setup-container h1 {
+  text-align: center;
+  font-size: 2rem;
+  color: #ffdd57;
+  margin-bottom: 25px;
+  text-shadow: 0 0 5px #000;
+}
+
+section {
+  margin-bottom: 20px;
+}
+
+label {
+  font-size: 0.95rem;
+  margin: 10px 0 5px;
+  display: block;
+  color: #f0f0f0;
+}
+
+input[type="text"],
+select {
+  width: 100%;
+  padding: 10px 14px;
+  margin-top: 5px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1em;
+  transition: background 0.2s ease-in-out;
+}
+
+input[type="text"]:focus,
+select:focus {
+  background: rgba(255, 255, 255, 0.15);
+  outline: none;
+}
+
+input[type="radio"] {
+  margin-right: 8px;
+}
+
+.mode-options label,
+.difficulty-options label,
+.grid-options label {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+button#start-btn {
+  background: #ffdd57;
+  color: #000;
+  border: none;
+  font-weight: bold;
+  font-size: 1.1em;
+  padding: 14px 20px;
+  border-radius: 10px;
+  width: 100%;
+  margin-top: 25px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+button#start-btn:hover {
+  background: #ffc107;
+}
+
+/* Optional glow when button is hovered */
+button#start-btn:focus {
+  outline: none;
+  box-shadow: 0 0 10px #ffdd57;
+}
+
+@media (max-width: 600px) {
+  .setup-container {
+    padding: 20px;
+  }
+
+  button#start-btn {
+    font-size: 1em;
+    padding: 12px 18px;
+  }
+}
+.two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.mode-box {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.25s ease;
+  border: 2px solid transparent;
+}
+
+input[type="radio"]:checked + .mode-box {
+  background: #ffdd57;
+  color: #000;
+  border-color: #fff;
+}
+
+.difficulty-options {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+.difficulty-options.active {
+  max-height: 200px;
+  opacity: 1;
+}
+

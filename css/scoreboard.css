@@ -1,0 +1,49 @@
+body {
+  background-color: #111;
+  color: #fff;
+  font-family: "Segoe UI", sans-serif;
+  padding: 30px;
+  text-align: center;
+}
+
+.scoreboard-container {
+  max-width: 800px;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px #000;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #555;
+}
+
+thead {
+  background: #222;
+}
+
+.actions {
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  background: #ffdd57;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  margin: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #ffc107;
+}

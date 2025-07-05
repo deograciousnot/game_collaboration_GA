@@ -1,40 +1,137 @@
+import { initUI, updateScore, updateMessage, endGame } from './ui.js';
+import { loadSettings } from './storage.js';
+import { state } from './state.js';
+
+
+// Background music setup
 const bgMusic = new Audio("assets/tictac.mp3");
-bgMusic.loop = true; // repeats the music continously
-bgMusic.volume = 0.5; // controls the volume
+bgMusic.loop = true;
+bgMusic.volume = 0.5;
 
-let soundOn = true; // checks whethe the music is on or off
+let soundOn = true;
 
-document.getElementById("start-btn").addEventListener("click", () => {
-  bgMusic.play().catch(e => console.log("Autoplay blocked"));
-});/* starts music when the stat button is clicked 
-it is function it is handled in the ui file*/
+// Initialize game when page loads
+document.addEventListener("DOMContentLoaded", () => {
+    // Load settings and initialize game
+    const settings = loadSettings();
+    if (!settings) {
+        window.location.href = "setup.html";
+        return;
+    }
+    
+    // Initialize the game UI
+    initUI(settings);
+    
+    // Apply theme background
+    const themeBackgrounds = {
+        classic: "url('assets/forest.jpeg')",
+        galaxy: "url('assets/space.jpeg')",
+        war: "url('assets/post-war.jpeg')"
+    };
+    document.body.style.backgroundImage = themeBackgrounds[settings.theme];
+    document.body.style.backgroundSize = "cover";
+    
+    // Try to play background music
+    bgMusic.play().catch(e => console.log("Autoplay blocked"));
 
-const muteBtn = document.getElementById("mute-btn");
-muteBtn.addEventListener("click", () => {
-  soundOn = !soundOn;
-  bgMusic.muted = !soundOn;
-  muteBtn.textContent = soundOn ? "Mute" : "Unmute";
-}); // muting and unmuting happens here 
+    // Setup all button handlers
+    setupButtonHandlers();
+});
 
-const themeSelect = document.getElementById("theme-select");
-const body = document.body;
+let isPaused = false;
 
-const themeBackgrounds = {
-  classic: "url('assets/forest.jpeg')",
-  galaxy: "url('assets/space.jpeg')",
-  war: "url('assets/post-war.jpeg')"
-};
+document.getElementById("pause-btn").addEventListener("click", () => {
+  isPaused = !isPaused;
 
-themeSelect.addEventListener("change", () => {
-  const selectedTheme = themeSelect.value;
-  body.style.backgroundImage = themeBackgrounds[selectedTheme];
-  body.style.backgroundSize = "cover";
-}); // theme bg like it allows the player to choose the theme he or she wants 
+  const boardContainer = document.querySelector(".game-container");
+  if (isPaused) {
+    document.body.classList.add("paused");
+    document.getElementById("pause-btn").textContent = "Resume";
+    stopTimer(); // Stop countdown
+    showOverlay("Paused...");
+    document.body.classList.add("paused");
+document.getElementById("board").classList.add("disabled");
 
-function launchConfetti() {
-  confetti({
-    particleCount: 200,
-    spread: 100,
-    origin: { y: 0.6 }
-  });// confetti animation am calling it in the ui file 
+  } else {
+    document.body.classList.remove("paused");
+    document.getElementById("pause-btn").textContent = "Pause";
+    removeOverlay();
+    // Resume timer if needed
+    startTimer(state.currentPlayer, state.difficulty, () => {
+      updateMessage(`Player took too long!`);
+      state.currentPlayer = state.currentPlayer === 1 ? 2 : 1;
+      updateScore();
+      endGame();
+    });
+  }
+});
+
+function showOverlay(text) {
+  const overlay = document.createElement("div");
+  overlay.id = "pause-overlay";
+  overlay.textContent = text;
+  document.body.appendChild(overlay);
+}
+
+function removeOverlay() {
+  const overlay = document.getElementById("pause-overlay");
+  if (overlay) overlay.remove();
+}
+
+
+function setupButtonHandlers() {
+    // Mute button
+    const muteBtn = document.getElementById("mute-btn");
+    muteBtn.addEventListener("click", () => {
+        soundOn = !soundOn;
+        bgMusic.muted = !soundOn;
+        muteBtn.textContent = soundOn ? "Mute" : "Unmute";
+    });
+
+    // Quit button
+const quitBtn = document.getElementById("quit-btn");
+quitBtn.addEventListener("click", () => {
+  const result = {
+    p1: state.player1.name,
+    p2: state.player2.name,
+    score1: state.player1.score,
+    score2: state.player2.score,
+    winner:
+      state.player1.score > state.player2.score
+        ? state.player1.name
+        : state.player1.score < state.player2.score
+        ? state.player2.name
+        : "Draw",
+    date: new Date().toLocaleString(),
+  };
+
+  const history = JSON.parse(localStorage.getItem("matchResults") || "[]");
+  history.push(result);
+  localStorage.setItem("matchResults", JSON.stringify(history));
+
+  window.location.href = "scoreboard.html";
+});
+
+
+    // Forfeit button
+    const forfeitBtn = document.getElementById("forfeit-btn");
+    forfeitBtn.addEventListener("click", () => {
+        const currentPlayerName = document.getElementById(currentPlayer === 1 ? "p1-name" : "p2-name").textContent;
+        if (confirm(`${currentPlayerName}, are you sure you want to forfeit?`)) {
+            const winner = currentPlayer === 1 ? player2 : player1;
+            winner.score++;
+            updateScore();
+            endGame();
+            updateMessage(`${winner.name} wins by forfeit! 🏳️`);
+        }
+    });
+}
+
+// Export for use in other files
+export function launchConfetti() {
+    confetti({
+        particleCount: 200,
+        spread: 100,
+        origin: { y: 0.6 }
+    });
 }

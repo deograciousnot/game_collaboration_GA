@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Board - Tic-Tac-Tension</title>
+  <link rel="stylesheet" href="css/board.css">
+</head>
+<body>
+  <div class="game-container">
+    <h2 id="match-heading">Tic-Tac-Tension</h2>
+
+    <div id="scoreboard">
+      <span id="p1-name"></span>: <span id="p1-score">0</span> —
+      <span id="p2-name"></span>: <span id="p2-score">0</span>
+    </div>
+
+    <div class="board" id="board"></div>
+    <div id="message"></div>
+
+    <div class="controls">
+      <button id="rematch-btn">Rematch</button>
+      <button id="forfeit-btn">Forfeit</button>
+      <button id="mute-btn">Mute</button>
+      <button id="quit-btn">Quit</button>
+      <button id="pause-btn">Pause</button>
+
+    </div>
+  </div>
+
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Main game loader -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

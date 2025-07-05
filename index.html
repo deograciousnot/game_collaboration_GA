@@ -3,67 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TicTacGO</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Tic-Tac-Tension</title>
+  <link rel="stylesheet" href="css/hero.css" />
 </head>
-<body >
-  <div class="container">
-    <h1>TicTacGO</h1>
-   
-    <div class="player-setup">
-      <input type="text" id="player1-name" placeholder="Player 1 Name" />
-      <select id="player1-emoji">
-        <option value="❌">❌</option>
-        <option value="🐱">🐱</option>
-        <option value="🦊">🦊</option>
-      </select>
-      <input type="text" id="player2-name" placeholder="Player 2 Name" />
-      <select id="player2-emoji">
-        <option value="⭕">⭕</option>
-        <option value="🐶">🐶</option>
-        <option value="🐸">🐸</option>
-      </select>
-    <div class="theme-section">
-      <label for="theme-select">Choose a Theme:</label>
-      <select id="theme-select">
-        <option value="" disabled selected hidden> Select Theme</option>
-        <option value="classic">🌲nature</option>
-        <option value="galaxy">🚀space</option>
-        <option value="war"> 🔥post-war</option>
-      </select>
-    </div>
- 
-    <div class="mode-select">
-  <label><input type="radio" name="mode" value="pvp" checked /> 👥Normal mode</label>
-  <label><input type="radio" name="mode" value="pvp-timed" /> Pvp Timed mode</label>
-  <label><input type="radio" name="mode" value="bot" /> Bot mode</label>
-</div>
- 
+<body>
+  <!-- 🎬 Background Video -->
+  <video id="bg-video" autoplay muted loop playsinline>
+    <source src="assets/intro.mp4" type="video/mp4"><!--i have put a mock up video as a placeholder-->
+    Your browser does not support the video tag.
+  </video>
 
+  <!-- ⏩ Skip Button -->
+  <button id="skip-intro">Skip Intro</button>
 
-      <button id="start-btn">Start Game</button>
-    </div>
-
-    <div id="scoreboard">
-      <p>Score: <span id="p1-score">0</span> - <span id="p2-score">0</span></p>
-    </div>
-
-    <div class="board" id="board"></div>
-
-    <div id="message"></div>
-
-    <div class="controls">
-      <button id="rematch-btn">Rematch</button>
-      <button id="mute-btn">Mute</button>
-    </div>
+  <!-- 🧊 Hero Glass Text -->
+  <div class="glass-card">
+    <p id="line" class="typing-text"></p>
+    <button id="start-btn" style="display: none;">Begin Your Quest</button>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <script src="js/ui.js"></script>
-  <script src="js/game.js"></script>
-  <script src="js/timer.js"></script>
-  <script src="js/main.js"></script>
+  <!-- 📜 Rules Section -->
+  <div class="rules-glass hidden" id="rules-glass">
+    <h2>Game Modes</h2>
+    <p>• PvP – Classic Mode<br>
+       • PvP Timed – Add pressure<br>
+       • Player vs Bot – Beware... the Machine never loses.</p>
+  </div>
 
+  <!-- 🔊 Narration -->
+  <audio id="narration" src="assets/mmmm.mp3" preload="auto"></audio> <!--this is the placeholder for the narration audio-->
+
+  <!-- ⚡ Transition Overlay -->
+  <div id="transition-overlay"> 
+    <div class="glitch-text">May the odds be ever in your favor...</div>
+  </div>
+
+  <script src="js/welcome.js"></script>
+  <audio id="glitch-sound" src="assets/glitch-transition.mp3" preload="auto"></audio>
 
 </body>
 </html>

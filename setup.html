@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Setup - Tic-Tac-Tension</title>
+  <link rel="stylesheet" href="css/setup.css" />
+</head>
+<body>
+  <div class="setup-container">
+    <h1>🎮 Game Setup</h1>
+
+    <!-- 👥 Players -->
+    <section class="player-section two-cols">
+      <div>
+        <label for="player1-name">Player 1</label>
+        <input type="text" id="player1-name" placeholder="Player 1 Name" />
+        <select id="player1-emoji">
+          <option value="❌">❌</option>
+          <option value="🐱">🐱</option>
+          <option value="🧙">🧙</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="player2-name">Player 2</label>
+        <input type="text" id="player2-name" placeholder="Player 2 Name" />
+        <select id="player2-emoji">
+          <option value="⭕">⭕</option>
+          <option value="🐶">🐶</option>
+          <option value="🦾">🦾</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- 🎮 Mode -->
+    <section class="mode-options">
+      <input type="radio" name="mode" id="mode-pvp" value="pvp" checked hidden>
+      <label for="mode-pvp" class="mode-box">👥 PvP (Classic)</label>
+
+      <input type="radio" name="mode" id="mode-pvp-timed" value="pvp-timed" hidden>
+      <label for="mode-pvp-timed" class="mode-box">⏱️ PvP (Timed)</label>
+
+      <input type="radio" name="mode" id="mode-bot" value="bot" hidden>
+      <label for="mode-bot" class="mode-box">🤖 Player vs Bot</label>
+    </section>
+
+    <!-- ⏱️ Difficulty (only if timed) -->
+    <section class="difficulty-options" id="difficulty-options">
+      <label>Timer Difficulty:</label><br>
+      <label><input type="radio" name="difficulty" value="easy" checked /> Easy (10s)</label>
+      <label><input type="radio" name="difficulty" value="medium" /> Medium (5s)</label>
+      <label><input type="radio" name="difficulty" value="hard" /> Hard (3s)</label>
+    </section>
+
+    <!-- 🤖 Bot Name -->
+    <section class="bot-name-group" id="bot-name-group">
+      <label for="bot-name">Choose a Bot Opponent:</label>
+      <select id="bot-name">
+        <option value="FriedChicken (Bot)">FriedChicken (Bot)</option>
+        <option value="CyberMonkey (Bot)">CyberMonkey (Bot)</option>
+        <option value="DarkByte (Bot)">DarkByte (Bot)</option>
+        <option value="NanoNuke (Bot)">NanoNuke (Bot)</option>
+        <option value="404NotFound (Bot)">404NotFound (Bot)</option>
+      </select>
+    </section>
+
+    <!-- 🎨 Theme -->
+    <section class="theme-options">
+      <label>Theme:</label>
+      <select id="theme-select">
+        <option value="classic">🌲 Nature</option>
+        <option value="galaxy">🚀 Space</option>
+        <option value="war">🔥 Post-War</option>
+      </select>
+    </section>
+
+    <!-- 🔲 Grid -->
+    <section class="grid-options">
+      <label>Board Size:</label><br>
+      <label><input type="radio" name="grid" value="3" checked /> 3×3</label>
+      <label><input type="radio" name="grid" value="5" /> 5×5</label>
+      <label><input type="radio" name="grid" value="7" /> 7×7</label>
+    </section>
+
+    <button id="start-btn">Start Match</button>
+  </div>
+
+  <script>
+    const modeRadios = document.querySelectorAll('input[name="mode"]');
+    const difficultySection = document.getElementById("difficulty-options");
+    const botNameGroup = document.getElementById("bot-name-group");
+
+    function updateUIBasedOnMode() {
+      const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+      difficultySection.classList.toggle("active", selectedMode === "pvp-timed" || selectedMode === "bot");
+      botNameGroup.style.display = (selectedMode === "bot") ? "block" : "none";
+
+      const p2Input = document.getElementById("player2-name");
+      p2Input.disabled = (selectedMode === "bot");
+      if (selectedMode === "bot") p2Input.value = "";
+    }
+
+    modeRadios.forEach(radio => {
+      radio.addEventListener("change", updateUIBasedOnMode);
+    });
+
+    updateUIBasedOnMode(); // run once on load
+
+    document.getElementById("start-btn").addEventListener("click", () => {
+      const mode = document.querySelector('input[name="mode"]:checked').value;
+      const isBot = mode === "bot";
+
+      const settings = {
+        p1: document.getElementById("player1-name").value || "Player 1",
+        p2: isBot
+          ? document.getElementById("bot-name").value
+          : document.getElementById("player2-name").value || "Player 2",
+        e1: document.getElementById("player1-emoji").value,
+        e2: document.getElementById("player2-emoji").value,
+        mode,
+        theme: document.getElementById("theme-select").value,
+        grid: parseInt(document.querySelector('input[name="grid"]:checked').value),
+        difficulty: (mode === "pvp-timed" || mode === "bot")
+          ? document.querySelector('input[name="difficulty"]:checked')?.value
+          : null
+      };
+
+      localStorage.setItem("ticSettings", JSON.stringify(settings));
+      window.location.href = "board.html";
+    });
+  </script>
+</body>
+</html>

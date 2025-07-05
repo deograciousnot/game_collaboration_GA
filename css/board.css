@@ -1,0 +1,144 @@
+/* board.css – Tic-Tac-Tension */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background-color: #111;
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.game-container {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 15px;
+  padding: 20px 30px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+h2#match-heading {
+  margin-bottom: 15px;
+  font-size: 1.8em;
+  color: #f0f0f0;
+  letter-spacing: 1px;
+}
+
+#scoreboard {
+  font-size: 1.1em;
+  margin-bottom: 15px;
+}
+
+.board {
+  display: grid;
+  gap: 5px;
+  grid-template-columns: repeat(3, 1fr); /* Fallback */
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1;
+  margin: 20px auto;
+}
+
+.cell {
+  background-color: #333;
+  color: white;
+  border: 1px solid #fff;
+  font-size: 2rem;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+
+.cell:hover {
+  background-color: rgba(255, 255, 255, 0.752);
+}
+
+#message {
+  margin-bottom: 20px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #ffdd57;
+  min-height: 1.5em;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.controls button {
+  background: #ffdd57;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: bold;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.controls button:hover {
+  background: #ffc107;
+}
+
+@media (max-width: 600px) {
+  .game-container {
+    padding: 15px 20px;
+  }
+
+  .cell {
+    font-size: 1.5rem;
+  }
+
+  h2#match-heading {
+    font-size: 1.5em;
+  }
+
+  .controls button {
+    padding: 8px 14px;
+    font-size: 0.9em;
+  }
+}
+.paused .game-container {
+  filter: blur(4px);
+}
+.board.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+
+#pause-overlay {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3em;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 30px 50px;
+  border-radius: 15px;
+  z-index: 999;
+  pointer-events: none;
+  font-weight: bold;
+}

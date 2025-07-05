@@ -1,23 +1,42 @@
-// This timer only works in pvp timed mode
-// Every player has 3 seconds to play or it switches to the next player automatically
+import { updateMessage, updateScore, endGame, renderBoard } from './ui.js';
+import { state } from './state.js';
 
-function startTimer() {
- 
-  if (gameMode !== "pvp-timed") return;
+let timerId = null;
 
-  clearTimeout(timer);
+export function startTimer(current, difficulty) {
+  clearTimeout(timerId);
 
-  const currentName = currentPlayer === 1 ? player1.name : player2.name;
-  updateMessage(`${currentName}'s turn ⏳`);
+  // Skip bot turns
+  if (state.gameMode === "bot" && current === 2) return;
 
-  timer = setTimeout(() => {
-    if (!gameActive) return;
-    updateMessage(`${currentName} took too long! ❌`);
+  const delayMap = {
+    easy: 10000,
+    medium: 5000,
+    hard: 3000
+  };
 
-    currentPlayer = currentPlayer === 1 ? 2 : 1;
-    renderBoard();
+  const delay = delayMap[difficulty] || 5000;
+  const currentName = current === 1 ? state.player1.name : state.player2.name;
 
-    
-    startTimer();
-  }, 3000); 
+  updateMessage(`${currentName}'s turn ⏳ (${delay / 1000}s)`);
+
+  timerId = setTimeout(() => {
+    if (!state.gameActive) return;
+
+    const loser = current === 1 ? state.player1 : state.player2;
+    const winner = current === 1 ? state.player2 : state.player1;
+
+    updateMessage(`${loser.name} ran out of time! ${winner.name} wins the round! 🕒`);
+    winner.score++;
+    updateScore();
+
+    endGame(); // Disable board and finish match
+
+    renderBoard(); // Optional: show final board
+
+  }, delay);
+}
+
+export function stopTimer() {
+  clearTimeout(timerId);
 }
