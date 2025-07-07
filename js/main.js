@@ -1,6 +1,6 @@
-import { initUI, updateScore, updateMessage, endGame } from './ui.js';
+import { initUI, updateScore, updateMessage, endGame, renderBoard, resetGame } from './ui.js';
 import { loadSettings } from './storage.js';
-import { state } from './state.js';
+import { loadGameState, state } from './state.js';
 
 
 // Background music setup
@@ -20,9 +20,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     state.gameMode = settings.mode;
+
+    const hasSaved = loadGameState();
+    const restoreBtn = document.getElementById("restore-btn");
+
     
     // Initialize the game UI
     initUI(settings);
+   
+    restoreBtn.addEventListener("click", () => {
+        const restored = loadGameState();
+        if (restored) {
+         renderBoard();
+         updateScore();
+         updateMessage(`${state.currentPlayer === 1 ? state.player1.name : state.player2.name}'s turn ⏳`); 
+        } else {
+             alert("No previous game found to restore.");
+      
+        }
+    });
     
     // Apply theme background
     const themeBackgrounds = {
@@ -109,7 +125,6 @@ quitBtn.addEventListener("click", () => {
 
   const history = JSON.parse(localStorage.getItem("matchResults") || "[]");
   history.push(result);
-  localStorage.setItem("matchResults", JSON.stringify(history));
 
   window.location.href = "scoreboard.html";
 });

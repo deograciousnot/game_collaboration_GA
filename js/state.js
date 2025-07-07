@@ -18,7 +18,43 @@ export const state = {
   },
 
   setCells(newCells) {
-    this.cells = newCells;
+    this.cells =[...newCells];
   }
 };
+
+export function saveGameState() {
+  const gameData = {
+    cells: state.cells,
+    currentPlayer: state.currentPlayer,
+    player1: state.player1,
+    player2: state.player2,
+    gameActive: state.gameActive,
+    moveHistory: state.moveHistory,
+    grid: state.grid,
+    gameMode: state.gameMode
+  };
+
+  localStorage.setItem("gameState", JSON.stringify(gameData));
+}
+
+export function loadGameState() {
+  const saved = JSON.parse(localStorage.getItem("gameState"));
+  if (!saved) return false;
+
+  state.cells = saved.cells || [];
+  state.currentPlayer = saved.currentPlayer || 1;
+  state.player1 = saved.player1;
+  state.player2 = saved.player2;
+  state.gameActive = saved.gameActive;
+  state.moveHistory = saved.moveHistory || [];
+  state.grid = saved.grid || 3;
+  state.gameMode = saved.gameMode || "pvp";
+
+  return true;
+}
+
+export function clearGameState() {
+  localStorage.removeItem("gameState");
+}
+
 

@@ -1,4 +1,6 @@
 // storage.js
+
+
 export function saveSettings(settings) {
   localStorage.setItem("ticSettings", JSON.stringify(settings));
 }

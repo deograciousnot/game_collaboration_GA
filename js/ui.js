@@ -1,6 +1,8 @@
 import { state } from './state.js';
 import { startTimer } from './timer.js';
 import { botMove, unbeatableBotMove } from './bot.js';
+import { saveGameState } from './state.js';
+
 
 
 
@@ -72,6 +74,8 @@ function handleCellClick(e) {
 
   const emoji = state.currentPlayer === 1 ? state.player1.emoji : state.player2.emoji;
   state.cells[index] = emoji;
+  saveGameState();
+  
   renderBoard();
 
   if (checkWin(emoji)) {
@@ -179,6 +183,7 @@ function launchConfetti() {
 
 export function endGame() {
   state.gameActive = false;
+  saveGameState();
 }
 
 export function showRandomStory() {
