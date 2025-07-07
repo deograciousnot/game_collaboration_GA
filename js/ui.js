@@ -85,7 +85,11 @@ function handleCellClick(e) {
   
   renderBoard();
 
-  if (checkWin(emoji)) {
+
+  const winningIndices = checkWin(emoji);
+  if (winningIndices) {
+    highlightWinningCells(winningIndices, state.currentPlayer);
+
     const winner = state.currentPlayer === 1 ? state.player1 : state.player2;
     updateMessage(`${winner.name} wins! 🎉`);
     launchConfetti();
@@ -179,7 +183,8 @@ function checkWin(sym) {
   lines.push([...Array(size).keys()].map(i => i * size + i)); // diag
   lines.push([...Array(size).keys()].map(i => i * size + (size - 1 - i))); // anti-diag
 
-  return lines.some(line => line.every(i => state.cells[i] === sym));
+  const winningLine = lines.find(line => line.every(i => state.cells[i] === sym));
+  return winningLine || null;
 }
 
 export function resetGame() {
@@ -257,4 +262,16 @@ export function showRandomStory() {
 
 window.hideStory = function () {
   document.getElementById("story-popup").classList.add("hidden");
+}
+
+export function highlightWinningCells(indices, currentPlayer) {
+  const allCells = document.querySelectorAll(".cell");
+
+  indices.forEach(index => {
+    const cell = allCells[index];
+    if (cell) {
+      const className = currentPlayer === 1 ? "winning-p1" : "winning-p2";
+      cell.classList.add("glow-bright");
+    }
+  });
 }
