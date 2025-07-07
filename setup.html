@@ -142,7 +142,11 @@
 
   <script>
     const gameState = JSON.parse(localStorage.getItem("gameState")) || {};
-    const playerScore = gameState?.player1?.score || 0;
+    if (gameState.player1) gameState.player1.score = 0;
+    if (gameState.player2) gameState.player2.score = 0;
+    localStorage.setItem("gameState", JSON.stringify(gameState));
+
+
 
     const baseUnlockedEmojis = ["❌", "⭕", "🐱", "🧙", "🐶", "🦾"];
     const emojiUnlocks = [
@@ -151,7 +155,8 @@
      { emoji: "👀", requiredScore: 6 },
      { emoji: "💀", requiredScore: 7 }
     ];
- 
+   
+    const playerScore = gameState.player1?.score || 0;
     const unlockedEmojis = [...baseUnlockedEmojis];
     emojiUnlocks.forEach(({ emoji, requiredScore }) => {
      if (playerScore >= requiredScore) unlockedEmojis.push(emoji);
