@@ -6,6 +6,10 @@ export const state = {
   cells: [],
   moveHistory: [],
 
+  unlockedEmojis: ["❌", "⭕", "🐱","🧙","🐶","🦾"],
+  unlockedThemes: ["Nature","space","post-war"],
+
+
   player1: {
     name: "Player 1",
     emoji: "❌",
@@ -20,6 +24,7 @@ export const state = {
   setCells(newCells) {
     this.cells =[...newCells];
   }
+
 };
 
 export function saveGameState() {
@@ -31,7 +36,11 @@ export function saveGameState() {
     gameActive: state.gameActive,
     moveHistory: state.moveHistory,
     grid: state.grid,
-    gameMode: state.gameMode
+    gameMode: state.gameMode,
+    unlockedEmojis: state.unlockedEmojis,
+    unlockedThemes: state.unlockedThemes,
+    
+
   };
 
   localStorage.setItem("gameState", JSON.stringify(gameData));
@@ -39,7 +48,7 @@ export function saveGameState() {
 
 export function loadGameState() {
   const saved = JSON.parse(localStorage.getItem("gameState"));
-  if (!saved) return false;
+  if (!saved || !saved.player1 || !saved.player2) return false;
 
   state.cells = saved.cells || [];
   state.currentPlayer = saved.currentPlayer || 1;
@@ -49,6 +58,8 @@ export function loadGameState() {
   state.moveHistory = saved.moveHistory || [];
   state.grid = saved.grid || 3;
   state.gameMode = saved.gameMode || "pvp";
+  state.unlockedEmojis = saved.unlockedEmojis ||  ["❌", "⭕", "🐱","🧙","🐶","🦾"];
+  state.unlockedThemes = saved.unlockedThemes ||   ["Nature","space","post-war"];
 
   return true;
 }

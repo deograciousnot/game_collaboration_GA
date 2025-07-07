@@ -44,7 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const themeBackgrounds = {
         classic: "url('assets/forest.jpeg')",
         galaxy: "url('assets/space.jpeg')",
-        war: "url('assets/post-war.jpeg')"
+        war: "url('assets/post-war.jpeg')",
+        ancient: "url('assets/ancient.jpeg')",
+        tik: "url('assets/tik.jpeg')",
+        secret: "url('assets/secret.jpeg')"
     };
     document.body.style.backgroundImage = themeBackgrounds[settings.theme];
     document.body.style.backgroundSize = "cover";
@@ -125,6 +128,7 @@ quitBtn.addEventListener("click", () => {
 
   const history = JSON.parse(localStorage.getItem("matchResults") || "[]");
   history.push(result);
+  localStorage.setItem("matchResults", JSON.stringify(history));
 
   window.location.href = "scoreboard.html";
 });

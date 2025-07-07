@@ -27,12 +27,11 @@
       <button onclick="localStorage.removeItem('matchResults'); location.reload();">Clear History</button>
     </div>
   </div>
+<script>
+  const tbody = document.querySelector("tbody");
+  const results = JSON.parse(localStorage.getItem("matchResults") || "[]");
 
-  <script>
-    const tbody = document.querySelector("tbody");
-    const results = JSON.parse(localStorage.getItem("matchResults") || "[]");
-
-    results.reverse().forEach(match => {
+  results.reverse().forEach(match => {
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${match.date}</td>

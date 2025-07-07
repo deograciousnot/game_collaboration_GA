@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Setup - Tic-Tac-Tension</title>
   <link rel="stylesheet" href="css/setup.css" />
+  
 </head>
 <body>
   <div class="setup-container">
@@ -19,6 +20,8 @@
           <option value="❌">❌</option>
           <option value="🐱">🐱</option>
           <option value="🧙">🧙</option>
+          <option value="🔥">🔥</option>
+          <option value="👀">👀</option>
         </select>
       </div>
 
@@ -29,6 +32,8 @@
           <option value="⭕">⭕</option>
           <option value="🐶">🐶</option>
           <option value="🦾">🦾</option>
+          <option value="🐮">🐮</option>
+          <option value="💀">💀</option>
         </select>
       </div>
     </section>
@@ -42,10 +47,10 @@
       <label for="mode-pvp-timed" class="mode-box">⏱️ PvP (Timed)</label>
 
       <input type="radio" name="mode" id="mode-bot" value="bot" hidden>
-      <label for="mode-bot" class="mode-box">🤖🧠 Bot (Easy)</label>
+      <label for="mode-bot" class="mode-box">🤖 Bot (Easy)</label>
       
       <input type="radio" name="mode" id="mode-bot-unbeatable" value="bot-unbeatable" hidden>
-      <label for="mode-bot-unbeatable" class="mode-box">💡 Player vs Bot (Unbeatable)</label>
+      <label for="mode-bot-unbeatable" class="mode-box">💡Bot (Unbeatable)</label>
     </section>
 
     <!-- ⏱️ Difficulty (only if timed) -->
@@ -71,11 +76,7 @@
     <!-- 🎨 Theme -->
     <section class="theme-options">
       <label>Theme:</label>
-      <select id="theme-select">
-        <option value="classic">🌲 Nature</option>
-        <option value="galaxy">🚀 Space</option>
-        <option value="war">🔥 Post-War</option>
-      </select>
+      <select id="theme-select"></select>
     </section>
 
     <!-- 🔲 Grid -->
@@ -101,20 +102,18 @@
 
       const p2Input = document.getElementById("player2-name");
       p2Input.disabled = (selectedMode === "bot" || selectedMode === "bot-unbeatable");
-      if (selectedMode === "bot" || selectedMode === "bot-unbeatable") p2Input.value = "";
-
+      if (p2Input.disabled) p2Input.value = "";
     }
 
     modeRadios.forEach(radio => {
       radio.addEventListener("change", updateUIBasedOnMode);
     });
 
-    updateUIBasedOnMode(); // run once on load
+    updateUIBasedOnMode();
 
     document.getElementById("start-btn").addEventListener("click", () => {
       const mode = document.querySelector('input[name="mode"]:checked').value;
       const isBot = mode === "bot" || mode === "bot-unbeatable";
-
 
       const settings = {
         p1: document.getElementById("player1-name").value || "Player 1",
@@ -129,12 +128,82 @@
         difficulty: (mode === "pvp-timed" || isBot)
           ? document.querySelector('input[name="difficulty"]:checked')?.value
           : null
-
       };
+
+      const gameState = JSON.parse(localStorage.getItem("gameState")) || {};
+      if (gameState.player1) gameState.player1.score = 0;
+      if (gameState.player2) gameState.player2.score = 0;
+      localStorage.setItem("gameState", JSON.stringify(gameState));
 
       localStorage.setItem("ticSettings", JSON.stringify(settings));
       window.location.href = "board.html";
     });
+  </script>
+
+  <script>
+    const gameState = JSON.parse(localStorage.getItem("gameState")) || {};
+    const unlockedEmojis = gameState.unlockedEmojis || ["❌", "⭕", "🐱", "🧙", "🐶", "🦾"];
+    const unlockedThemes = gameState.unlockedThemes || ["classic", "galaxy", "war"];
+
+    const themeOptions = {
+      classic: { label: "🌲 Nature" },
+      galaxy: { label: "🚀 Space"},
+      war: { label: "🔥 Post-War" },
+      ancient: { label: "🔱 Ancient"},
+      tik: { label: "⚔️ Tik" },
+      secret: { label: "😊 Secret" }
+    };
+
+    function updateEmojiOptions(selectId) {
+      const select = document.getElementById(selectId);
+      [...select.options].forEach(option => {
+        const emoji = option.value;
+        const isUnlocked = unlockedEmojis.includes(emoji);
+        option.disabled = !isUnlocked;
+        option.textContent = isUnlocked ? emoji : `${emoji} 🔒`;
+      });
+    }
+
+    function unlockEmoji(emoji) {
+      if (!unlockedEmojis.includes(emoji)) {
+        unlockedEmojis.push(emoji);
+        gameState.unlockedEmojis = unlockedEmojis;
+        localStorage.setItem("gameState", JSON.stringify(gameState));
+        updateEmojiOptions("player1-emoji");
+        updateEmojiOptions("player2-emoji");
+        alert(`🎉 You unlocked a new emoji: ${emoji}`);
+      }
+    }
+
+    function updateThemeOptions() {
+      const select = document.getElementById("theme-select");
+      select.innerHTML = "";
+
+      for (const key in themeOptions) {
+        const option = document.createElement("option");
+        const theme = themeOptions[key];
+        option.value = key;
+        const isUnlocked = unlockedThemes.includes(key);
+        option.disabled = !isUnlocked;
+        option.textContent = isUnlocked ? theme.label : `${theme.label} 🔒`;
+        select.appendChild(option);
+      }
+    }
+
+    if (gameState?.player1?.score >= 5 && !unlockedThemes.includes("ancient")) unlockedThemes.push("ancient");
+    if (gameState?.player1?.score >= 8 && !unlockedThemes.includes("tik")) unlockedThemes.push("tik");
+    if (gameState?.player1?.score >= 10 && !unlockedThemes.includes("secret")) unlockedThemes.push("secret");
+
+    gameState.unlockedThemes = unlockedThemes;
+    localStorage.setItem("gameState", JSON.stringify(gameState));
+
+    updateEmojiOptions("player1-emoji");
+    updateEmojiOptions("player2-emoji");
+    updateThemeOptions();
+
+    if (gameState?.player1?.score >= 3 && !unlockedEmojis.includes("🐮")) {
+      unlockEmoji("🐮");
+    }
   </script>
 </body>
 </html>

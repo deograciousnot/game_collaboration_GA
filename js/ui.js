@@ -21,6 +21,10 @@ export function initUI(settings) {
   state.player1.emoji = settings.e1;
   state.player2.name = settings.p2;
   state.player2.emoji = settings.e2;
+
+   state.player1.score = 0;
+  state.player2.score = 0;
+  
   gameMode = settings.mode;
   difficulty = settings.difficulty;
   size = settings.grid;
@@ -40,6 +44,9 @@ export function initUI(settings) {
         const previousBoard = state.moveHistory.pop();
         state.setCells(previousBoard);
         state.currentPlayer = state.currentPlayer === 1 ? 2 : 1;
+        state.player1.score = 0;
+        state.player2.score = 0;
+        saveGameState(); 
         renderBoard();
         updateMessage(`${state.currentPlayer === 1 ? state.player1.name : state.player2.name}'s turn ⏳`);
   });
@@ -83,6 +90,46 @@ function handleCellClick(e) {
     updateMessage(`${winner.name} wins! 🎉`);
     launchConfetti();
     winner.score++;
+    const newlyUnlocked = [];
+
+     if (!state.unlockedEmojis.includes("🐮") && winner.score >= 3) {
+         state.unlockedEmojis.push("🐮");
+         newlyUnlocked.push("🐮");
+     }
+
+     if (!state.unlockedEmojis.includes("🔥") && winner.score >= 5) {
+         state.unlockedEmojis.push("🔥");
+        newlyUnlocked.push("🔥");
+     }
+
+     if (!state.unlockedEmojis.includes("💀") && winner.score >= 7) {
+       state.unlockedEmojis.push("💀");
+       newlyUnlocked.push("💀");
+     }
+
+     if (!state.unlockedEmojis.includes("👀") && winner.score >= 7) {
+       state.unlockedEmojis.push("👀");
+       newlyUnlocked.push("👀");
+     }
+     if (!state.unlockedThemes.includes("ancient") && winner.score >= 5) {
+       state.unlockedThemes.push("ancient");
+       newlyUnlocked.push("🔱ancient Theme");
+     }
+
+     if (!state.unlockedThemes.includes("tik") && winner.score >= 8) {
+        state.unlockedThemes.push("tik");
+        newlyUnlocked.push("⚔️ tik Theme");
+     }
+
+      if (!state.unlockedThemes.includes("secret") && winner.score >= 8) {
+        state.unlockedThemes.push("secret");
+        newlyUnlocked.push("😊 secret Theme");
+     }
+
+    if (newlyUnlocked.length > 0) {
+      alert(`${winner.name} unlocked: ${newlyUnlocked.join(", ")} 🎉`);
+      saveGameState();
+    }
     updateScore();
     showRandomStory();
     endGame();
