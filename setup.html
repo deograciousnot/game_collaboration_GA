@@ -142,9 +142,22 @@
 
   <script>
     const gameState = JSON.parse(localStorage.getItem("gameState")) || {};
-    const unlockedEmojis = gameState.unlockedEmojis || ["❌", "⭕", "🐱", "🧙", "🐶", "🦾"];
+    const playerScore = gameState?.player1?.score || 0;
 
-    const defaultUnlockedThemes = ["classic", "galaxy", "war"];
+    const baseUnlockedEmojis = ["❌", "⭕", "🐱", "🧙", "🐶", "🦾"];
+    const emojiUnlocks = [
+     { emoji: "🐮", requiredScore: 3 },
+     { emoji: "🔥", requiredScore: 4 },
+     { emoji: "👀", requiredScore: 6 },
+     { emoji: "💀", requiredScore: 7 }
+    ];
+ 
+    const unlockedEmojis = [...baseUnlockedEmojis];
+    emojiUnlocks.forEach(({ emoji, requiredScore }) => {
+     if (playerScore >= requiredScore) unlockedEmojis.push(emoji);
+    });
+    gameState.unlockedEmojis = unlockedEmojis;
+
     const themeOptions = {
       classic: { label: "🌲 Nature" },
       galaxy: { label: "🚀 Space"},
@@ -154,24 +167,16 @@
       secret: { label: "😊 Secret" }
     };
 
-    let unlockedThemes = gameState.unlockedThemes || defaultUnlockedThemes;
+     const unlockedThemes = ["classic", "galaxy", "war"];
+     if (playerScore >= 5) unlockedThemes.push("ancient");
+     if (playerScore >= 8) unlockedThemes.push("tik");
+     if (playerScore >= 10) unlockedThemes.push("secret");
+     gameState.unlockedThemes = unlockedThemes;
+     
 
-    const allThemes = Object.keys(themeOptions);
-    const hasInvalidThemes = unlockedThemes.some(
-      theme => !defaultUnlockedThemes.includes(theme) && !(gameState?.player1?.score >= 5)
-    );
-    if (hasInvalidThemes) {
-      unlockedThemes = [...defaultUnlockedThemes];
-    }
+     localStorage.setItem("gameState", JSON.stringify(gameState));
 
-    if (gameState?.player1?.score >= 5 && !unlockedThemes.includes("ancient")) unlockedThemes.push("ancient");
-    if (gameState?.player1?.score >= 8 && !unlockedThemes.includes("tik")) unlockedThemes.push("tik");
-    if (gameState?.player1?.score >= 10 && !unlockedThemes.includes("secret")) unlockedThemes.push("secret");
-    
-    gameState.unlockedThemes = unlockedThemes;
-    localStorage.setItem("gameState", JSON.stringify(gameState));
-
-    function updateEmojiOptions(selectId) {
+     function updateEmojiOptions(selectId) {
       const select = document.getElementById(selectId);
       [...select.options].forEach(option => {
         const emoji = option.value;
@@ -179,17 +184,6 @@
         option.disabled = !isUnlocked;
         option.textContent = isUnlocked ? emoji : `${emoji} 🔒`;
       });
-    }
-
-    function unlockEmoji(emoji) {
-      if (!unlockedEmojis.includes(emoji)) {
-        unlockedEmojis.push(emoji);
-        gameState.unlockedEmojis = unlockedEmojis;
-        localStorage.setItem("gameState", JSON.stringify(gameState));
-        updateEmojiOptions("player1-emoji");
-        updateEmojiOptions("player2-emoji");
-        alert(`🎉 You unlocked a new emoji: ${emoji}`);
-      }
     }
 
     function updateThemeOptions() {
@@ -207,14 +201,10 @@
       }
     }
 
-
     updateEmojiOptions("player1-emoji");
     updateEmojiOptions("player2-emoji");
     updateThemeOptions();
 
-    if (gameState?.player1?.score >= 3 && !unlockedEmojis.includes("🐮")) {
-      unlockEmoji("🐮");
-    }
   </script>
 </body>
 </html>
