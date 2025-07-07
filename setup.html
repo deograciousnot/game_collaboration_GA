@@ -143,8 +143,8 @@
   <script>
     const gameState = JSON.parse(localStorage.getItem("gameState")) || {};
     const unlockedEmojis = gameState.unlockedEmojis || ["❌", "⭕", "🐱", "🧙", "🐶", "🦾"];
-    const unlockedThemes = gameState.unlockedThemes || ["classic", "galaxy", "war"];
 
+    const defaultUnlockedThemes = ["classic", "galaxy", "war"];
     const themeOptions = {
       classic: { label: "🌲 Nature" },
       galaxy: { label: "🚀 Space"},
@@ -153,6 +153,23 @@
       tik: { label: "⚔️ Tik" },
       secret: { label: "😊 Secret" }
     };
+
+    let unlockedThemes = gameState.unlockedThemes || defaultUnlockedThemes;
+
+    const allThemes = Object.keys(themeOptions);
+    const hasInvalidThemes = unlockedThemes.some(
+      theme => !defaultUnlockedThemes.includes(theme) && !(gameState?.player1?.score >= 5)
+    );
+    if (hasInvalidThemes) {
+      unlockedThemes = [...defaultUnlockedThemes];
+    }
+
+    if (gameState?.player1?.score >= 5 && !unlockedThemes.includes("ancient")) unlockedThemes.push("ancient");
+    if (gameState?.player1?.score >= 8 && !unlockedThemes.includes("tik")) unlockedThemes.push("tik");
+    if (gameState?.player1?.score >= 10 && !unlockedThemes.includes("secret")) unlockedThemes.push("secret");
+    
+    gameState.unlockedThemes = unlockedThemes;
+    localStorage.setItem("gameState", JSON.stringify(gameState));
 
     function updateEmojiOptions(selectId) {
       const select = document.getElementById(selectId);
@@ -190,12 +207,6 @@
       }
     }
 
-    if (gameState?.player1?.score >= 5 && !unlockedThemes.includes("ancient")) unlockedThemes.push("ancient");
-    if (gameState?.player1?.score >= 8 && !unlockedThemes.includes("tik")) unlockedThemes.push("tik");
-    if (gameState?.player1?.score >= 10 && !unlockedThemes.includes("secret")) unlockedThemes.push("secret");
-
-    gameState.unlockedThemes = unlockedThemes;
-    localStorage.setItem("gameState", JSON.stringify(gameState));
 
     updateEmojiOptions("player1-emoji");
     updateEmojiOptions("player2-emoji");
