@@ -1,14 +1,36 @@
-// logic.js
 export function checkWin(cells, size, symbol) {
-  const lines = [];
+  const winLength = size === 3 ? 3 : 4; 
 
-  for (let i = 0; i < size; i++) {
-    lines.push([...Array(size).keys()].map(j => i * size + j)); // rows
-    lines.push([...Array(size).keys()].map(j => j * size + i)); // cols
+  
+  function hasStreak(startRow, startCol, dirRow, dirCol) {
+    let streak = 0;
+
+    for (let i = 0; i < winLength; i++) {
+      const row = startRow + i * dirRow;
+      const col = startCol + i * dirCol;
+      if (row >= size || col >= size || row < 0 || col < 0) return false;
+      if (cells[row * size + col] === symbol) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+
+    return streak === winLength;
   }
 
-  lines.push([...Array(size).keys()].map(i => i * size + i)); // diag
-  lines.push([...Array(size).keys()].map(i => i * size + (size - 1 - i))); // anti-diag
+  for (let row = 0; row < size; row++) {
+    for (let col = 0; col < size; col++) {
+      if (
+        hasStreak(row, col, 0, 1) || 
+        hasStreak(row, col, 1, 0) || 
+        hasStreak(row, col, 1, 1) || 
+        hasStreak(row, col, 1, -1)   
+      ) {
+        return true;
+      }
+    }
+  }
 
-  return lines.some(line => line.every(i => cells[i] === symbol));
+  return false;
 }

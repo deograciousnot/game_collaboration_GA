@@ -4,6 +4,7 @@ export const state = {
   currentPlayer: 1,
   gameActive: true,
   cells: [],
+  moveHistory: [],
 
   player1: {
     name: "Player 1",
@@ -20,3 +21,4 @@ export const state = {
     this.cells = newCells;
   }
 };
+

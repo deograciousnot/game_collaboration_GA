@@ -1,6 +1,8 @@
 import { state } from './state.js';
 import { startTimer } from './timer.js';
-import { botMove } from './bot.js';
+import { botMove, unbeatableBotMove } from './bot.js';
+
+
 
 const board = document.getElementById("board");
 const message = document.getElementById("message");
@@ -20,12 +22,27 @@ export function initUI(settings) {
   gameMode = settings.mode;
   difficulty = settings.difficulty;
   size = settings.grid;
+  state.grid = size;
+  
 
   board.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
   updateMessage(`${state.player1.name}'s turn ⏳`);
   resetGame();
 
   rematchBtn.addEventListener("click", resetGame);
+  const undoBtn = document.getElementById("undo-btn");
+    if (undoBtn) {
+      undoBtn.addEventListener("click", () => {
+        if (state.moveHistory.length === 0 || !state.gameActive) return;
+
+        const previousBoard = state.moveHistory.pop();
+        state.setCells(previousBoard);
+        state.currentPlayer = state.currentPlayer === 1 ? 2 : 1;
+        renderBoard();
+        updateMessage(`${state.currentPlayer === 1 ? state.player1.name : state.player2.name}'s turn ⏳`);
+  });
+}
+
 
   const name1El = document.getElementById("p1-name");
   const name2El = document.getElementById("p2-name");
@@ -51,6 +68,8 @@ function handleCellClick(e) {
   const index = parseInt(e.target.dataset.index);
   if (!state.gameActive || state.cells[index] !== "") return;
 
+  state.moveHistory.push([...state.cells]);
+
   const emoji = state.currentPlayer === 1 ? state.player1.emoji : state.player2.emoji;
   state.cells[index] = emoji;
   renderBoard();
@@ -61,6 +80,7 @@ function handleCellClick(e) {
     launchConfetti();
     winner.score++;
     updateScore();
+    showRandomStory();
     endGame();
     return;
   }
@@ -81,13 +101,20 @@ function handleCellClick(e) {
       const opponent = state.currentPlayer === 1 ? state.player2 : state.player1;
       opponent.score++;
       updateScore();
+      showRandomStory();
       endGame();
     });
   }
 
-  if (gameMode === "bot" && state.currentPlayer === 2) {
+ 
+  if ((gameMode === "bot" || gameMode === "bot-unbeatable") && state.currentPlayer === 2) {
+   if (gameMode === "bot-unbeatable") {
+    setTimeout(unbeatableBotMove, 500);
+   } else {
     setTimeout(botMove, 500);
-  }
+   }
+}
+
 }
 
 function checkWin(sym) {
@@ -106,6 +133,7 @@ function checkWin(sym) {
 
 export function resetGame() {
   state.setCells(Array(size * size).fill(""));
+  state.moveHistory = [];
   state.gameActive = true;
   state.currentPlayer = 1;
   updateScore();
@@ -121,9 +149,15 @@ export function resetGame() {
     });
   }
 
-  if (gameMode === "bot" && state.currentPlayer === 2) {
+  if ((gameMode === "bot" || gameMode === "bot-unbeatable") && state.currentPlayer === 2) {
+   if (gameMode === "bot-unbeatable") {
+    setTimeout(unbeatableBotMove, 500);
+   } else {
     setTimeout(botMove, 500);
-  }
+   }
+}
+
+ 
 }
 
 export function updateScore() {
@@ -145,4 +179,30 @@ function launchConfetti() {
 
 export function endGame() {
   state.gameActive = false;
+}
+
+export function showRandomStory() {
+  const stories = [
+   "🧙‍♀️ Code Wizard just cast ‘Game Over’ — you stood no chance!",
+   "⚔️ Player said: ‘Click click boom!’ — and just took the win.",
+   "🐱 Kitty hacked the grid — like, literally clawed their way to victory.",
+   "🦊 Fox unlocked beast mode. Like, are you even playing, or just watching?",
+   "🐶 DebugDog barked once and the bugs surrendered. Game = done.",
+   "💥 This wasn’t just a win, it was a whole *main character moment*.",
+   "🚀 Boom! Someone just launched themselves to victory — no countdown needed.",
+   "🎮 Game said ‘Tic’... player said ‘Tac’, and ‘Toe’ got SMACKED.",
+   "🌀 Hold up — did you just witness a *legendary* Tic Tac move?",
+   "😎 Someone’s cooking. And it’s not even close — that board just got served."
+  ];
+
+  const popup = document.getElementById("story-popup");
+  const storyText = document.getElementById("story-text");
+  const randomStory = stories[Math.floor(Math.random() * stories.length)];
+
+  storyText.textContent = randomStory;
+  popup.classList.remove("hidden");
+}
+
+window.hideStory = function () {
+  document.getElementById("story-popup").classList.add("hidden");
 }

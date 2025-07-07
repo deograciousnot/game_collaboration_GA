@@ -11,3 +11,4 @@ export function loadSettings() {
 export function clearSettings() {
   localStorage.removeItem("ticSettings");
 }
+

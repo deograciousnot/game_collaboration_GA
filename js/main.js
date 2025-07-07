@@ -18,6 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "setup.html";
         return;
     }
+
+    state.gameMode = settings.mode;
     
     // Initialize the game UI
     initUI(settings);
@@ -116,9 +118,9 @@ quitBtn.addEventListener("click", () => {
     // Forfeit button
     const forfeitBtn = document.getElementById("forfeit-btn");
     forfeitBtn.addEventListener("click", () => {
-        const currentPlayerName = document.getElementById(currentPlayer === 1 ? "p1-name" : "p2-name").textContent;
+        const currentPlayerName = state.currentPlayer === 1 ? state.player1.name : state.player2.name;
         if (confirm(`${currentPlayerName}, are you sure you want to forfeit?`)) {
-            const winner = currentPlayer === 1 ? player2 : player1;
+            const winner = state.currentPlayer === 1 ? state.player2 : state.player1;
             winner.score++;
             updateScore();
             endGame();

@@ -42,7 +42,10 @@
       <label for="mode-pvp-timed" class="mode-box">⏱️ PvP (Timed)</label>
 
       <input type="radio" name="mode" id="mode-bot" value="bot" hidden>
-      <label for="mode-bot" class="mode-box">🤖 Player vs Bot</label>
+      <label for="mode-bot" class="mode-box">🤖🧠 Bot (Easy)</label>
+      
+      <input type="radio" name="mode" id="mode-bot-unbeatable" value="bot-unbeatable" hidden>
+      <label for="mode-bot-unbeatable" class="mode-box">💡 Player vs Bot (Unbeatable)</label>
     </section>
 
     <!-- ⏱️ Difficulty (only if timed) -->
@@ -94,11 +97,12 @@
     function updateUIBasedOnMode() {
       const selectedMode = document.querySelector('input[name="mode"]:checked').value;
       difficultySection.classList.toggle("active", selectedMode === "pvp-timed" || selectedMode === "bot");
-      botNameGroup.style.display = (selectedMode === "bot") ? "block" : "none";
+      botNameGroup.style.display = (selectedMode === "bot" || selectedMode === "bot-unbeatable") ? "block" : "none";
 
       const p2Input = document.getElementById("player2-name");
-      p2Input.disabled = (selectedMode === "bot");
-      if (selectedMode === "bot") p2Input.value = "";
+      p2Input.disabled = (selectedMode === "bot" || selectedMode === "bot-unbeatable");
+      if (selectedMode === "bot" || selectedMode === "bot-unbeatable") p2Input.value = "";
+
     }
 
     modeRadios.forEach(radio => {
@@ -109,7 +113,8 @@
 
     document.getElementById("start-btn").addEventListener("click", () => {
       const mode = document.querySelector('input[name="mode"]:checked').value;
-      const isBot = mode === "bot";
+      const isBot = mode === "bot" || mode === "bot-unbeatable";
+
 
       const settings = {
         p1: document.getElementById("player1-name").value || "Player 1",
@@ -121,9 +126,10 @@
         mode,
         theme: document.getElementById("theme-select").value,
         grid: parseInt(document.querySelector('input[name="grid"]:checked').value),
-        difficulty: (mode === "pvp-timed" || mode === "bot")
+        difficulty: (mode === "pvp-timed" || isBot)
           ? document.querySelector('input[name="difficulty"]:checked')?.value
           : null
+
       };
 
       localStorage.setItem("ticSettings", JSON.stringify(settings));
