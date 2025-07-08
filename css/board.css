@@ -41,6 +41,21 @@ h2#match-heading {
 #scoreboard {
   font-size: 1.1em;
   margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.score-row {
+  text-align: center;
+}
+
+.xp-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95em;
+  color: #ffdd57;
+  padding: 0 10px;
 }
 
 .board {
@@ -63,11 +78,19 @@ h2#match-heading {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+
 }
 
 
 .cell:hover {
   background-color: rgba(255, 255, 255, 0.752);
+}
+
+.cell:active {
+  background-color: #555 ;
+  transform: scale(0.95);
+  box-shadow: inset 0 0 10px #000;
 }
 
 #message {

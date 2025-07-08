@@ -14,11 +14,13 @@ export const state = {
     name: "Player 1",
     emoji: "❌",
     score: 0,
+    xp: 0,
   },
   player2: {
     name: "Player 2",
     emoji: "⭕",
     score: 0,
+    xp: 0,
   },
 
   setCells(newCells) {
