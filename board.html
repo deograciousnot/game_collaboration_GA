@@ -11,10 +11,25 @@
     <h2 id="match-heading">Tic-Tac-Tension</h2>
 
     <div id="scoreboard">
-      <span id="p1-name"></span>: <span id="p1-score">0</span> —
-      <span id="p2-name"></span>: <span id="p2-score">0</span>
+     <div class="score-row">
+       <span id="p1-name"></span>: <span id="p1-score">0</span> —
+       <span id="p2-name"></span>: <span id="p2-score">0</span>
+     </div>
+     <div class="xp-row">
+      <span id="p1-xp">XP: 0</span>
+      <span style="flex: 1"></span>
+      <span id="p2-xp">XP: 0</span>
+     </div>
     </div>
 
+        
+    <div class="narrator-toggle">
+     <label>
+       <input type="checkbox" id="narrator-toggle" checked />
+        🎤 Enable Narrator
+     </label>
+    </div>
+    
     <div class="board" id="board"></div>
     <div id="message"></div>
 

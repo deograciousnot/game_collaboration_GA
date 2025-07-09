@@ -11,6 +11,8 @@ const message = document.getElementById("message");
 const p1ScoreDisplay = document.getElementById("p1-score");
 const p2ScoreDisplay = document.getElementById("p2-score");
 const rematchBtn = document.getElementById("rematch-btn");
+const p1XPDisplay = document.getElementById("p1-xp");
+const p2XPDisplay = document.getElementById("p2-xp");
 
 let size = 3;
 let gameMode = "pvp";
@@ -92,8 +94,11 @@ function handleCellClick(e) {
 
     const winner = state.currentPlayer === 1 ? state.player1 : state.player2;
     updateMessage(`${winner.name} wins! 🎉`);
+    speak(`Sheeeesh! ${winner.name}did not come to play! `);
     launchConfetti();
     winner.score++;
+    winner.xp += 10;
+    updateXP();
     const newlyUnlocked = [];
 
      if (!state.unlockedEmojis.includes("🐮") && winner.score >= 3) {
@@ -142,6 +147,11 @@ function handleCellClick(e) {
 
   if (!state.cells.includes("")) {
     updateMessage("It's a draw!");
+    speak("Eh, it's giving... mid. Try again.");
+
+    state.player1.xp = (state.player1.xp || 0) + 5;
+    state.player2.xp = (state.player2.xp || 0) + 5;
+    updateXP();
     endGame();
     return;
   }
@@ -221,6 +231,11 @@ export function updateScore() {
   p2ScoreDisplay.textContent = state.player2.score;
 }
 
+export function updateXP() {
+  p1XPDisplay.textContent = `XP: ${state.player1.xp}`;
+  p2XPDisplay.textContent = `XP: ${state.player2.xp}`;
+}
+
 export function updateMessage(msg) {
   message.textContent = msg;
 }
@@ -274,4 +289,16 @@ export function highlightWinningCells(indices, currentPlayer) {
       cell.classList.add("glow-bright");
     }
   });
+}
+
+export function speak(text) {
+  const toggle = document.getElementById("narrator-toggle");
+  if (toggle && !toggle.checked) return;
+
+  const msg = new SpeechSynthesisUtterance(text);
+  msg.pitch = 1;
+  msg.rate = 1;
+  msg.volume = 1;
+
+  window.speechSynthesis.speak(msg);
 }
